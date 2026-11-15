@@ -1,0 +1,293 @@
+% Compilar desde slides:
+% pdflatex main.tex -> biber main -> pdflatex main.tex -> pdflatex main.tex
+% Editar los campos entre corchetes. Las notas \note{} guían el ensayo.
+% Usar \guiasfalse para ocultar las indicaciones de edición.
+% Entrega: completar FORM-MC-01 y FORM-AC-01, validar el registro en el foro
+% y comprobar que SGRA no coincide con los TA-IND-01 del equipo.
+% Preparar notas de 2--4 páginas con aportes, declaración de IA y foto del bosquejo.
+% Añadir tres capturas anotadas, un ejemplo propio, bitácora y ensayo de hasta 12 min.
+% Cada integrante aporta tres commits significativos; el historial abarca tres días.
+% En SGA va una página de identificación y URL completa del repositorio público.
+\documentclass[aspectratio=169,12pt]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=.95]{helvet}
+\usepackage[spanish,es-nodecimaldot,es-notilde]{babel}
+\usepackage{tikz,booktabs,tabularx}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{../evidencias/capturas-fuentes/referencias.bib}
+\setbeameroption{hide notes}
+
+\newif\ifguias
+\guiastrue
+
+\definecolor{Tinta}{HTML}{19263D}
+\definecolor{Azul}{HTML}{345277}
+\definecolor{Cielo}{HTML}{D4E1EE}
+\definecolor{Bruma}{HTML}{E9F0F7}
+\definecolor{Gris}{HTML}{46556A}
+\definecolor{Papel}{HTML}{F2F2F1}
+
+\setbeamercolor{normal text}{fg=Tinta,bg=white}
+\setbeamercolor{frametitle}{fg=Tinta}
+\setbeamercolor{structure}{fg=Azul}
+\setbeamercolor{pie}{fg=Gris,bg=Bruma}
+\setbeamercolor{guia}{fg=Azul,bg=Bruma}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamersize{text margin left=12mm,text margin right=12mm}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{frametitle}{%
+  \vspace*{4mm}
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle\par}
+  \vspace*{1.5mm}{\color{Cielo}\rule{\linewidth}{.75pt}}\par
+  \vspace*{1.5mm}}
+\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \shade[left color=white,right color=Papel] (current page.south west)
+      rectangle (current page.north east);
+    \begin{scope}[shift={(current page.north east)}]
+      \shade[left color=Azul,right color=Tinta] (-1.55,0)--(0,0)--(0,-1.55)--cycle;
+      \foreach \x in {1.45,1.65,1.85}
+        \foreach \y in {.26,.46}
+          \fill[Azul!65] (-\x,-\y) circle (.026);
+    \end{scope}
+  \end{tikzpicture}}
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.8ex,dp=1.35ex,leftskip=12mm,rightskip=12mm]{pie}
+    \scriptsize LMRT \quad / \quad EXP-1 \hfill \turno \hfill \insertframenumber
+  \end{beamercolorbox}}
+\renewcommand{\arraystretch}{1.23}
+\newcommand{\turno}{}
+\newcommand{\bloque}[2]{\renewcommand{\turno}{#1 \quad\textbar\quad #2}}
+\newcommand{\campo}[1]{\textcolor{Azul}{[#1]}}
+\newcommand{\guia}[1]{\ifguias\par\medskip
+  \begin{beamercolorbox}[wd=\linewidth,sep=1.05ex]{guia}
+    \small\textbf{Para completar}\quad #1
+  \end{beamercolorbox}\fi}
+\tikzset{nodo/.style={draw=Azul!45,fill=Bruma,rounded corners=1pt,
+  align=center,minimum width=3.1cm,minimum height=1cm},
+  enlace/.style={Stealth-Stealth,thick,draw=Azul}}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \begin{scope}[shift={(current page.north west)}]
+      \shade[left color=Azul,right color=Cielo]
+        (0,0)--(10.8,0) .. controls (10.75,-.42) and (10.25,-.63) .. (9.7,-.63)
+        --(0,-.63)--cycle;
+      \foreach \x in {.45,.78,1.11,1.44,1.77,2.10}
+        \fill[white] (\x,-.32) circle (.045);
+    \end{scope}
+    \begin{scope}[shift={(current page.south west)}]
+      \shade[bottom color=Cielo,top color=Azul] (0,0)--(0,1.55)--(1.55,0)--cycle;
+    \end{scope}
+    \begin{scope}[shift={(current page.south east)}]
+      \shade[left color=Azul,right color=Tinta]
+        (0,0)--(-10.8,0) .. controls (-10.75,.42) and (-10.25,.63) .. (-9.7,.63)
+        --(0,.63)--cycle;
+      \foreach \x in {-.45,-.78,-1.11,-1.44,-1.77,-2.10}
+        \fill[white] (\x,.32) circle (.045);
+    \end{scope}
+  \end{tikzpicture}
+  \centering
+  {\small\bfseries\color{Azul} UTEQ \enspace / \enspace Aplicaciones Distribuidas \enspace / \enspace EXP-1\par}
+  \vspace{7mm}
+  {\fontsize{32}{36}\selectfont\bfseries RPC, gRPC y RMI\par}
+  \vspace{2mm}
+  {\large Comunicación distribuida y análisis de SGRA\par}
+  \vspace{6mm}
+  {\small\bfseries EQUIPO LMRT\par}
+  \vspace{2mm}
+  {\small\setlength{\tabcolsep}{5mm}
+  \begin{tabular}{c@{\qquad}c}
+    Loor Mendoza Byron Daniel & Mera Jumbo Allison Michelle\\
+    Reinoso Vélez Eduardo David & Toaquiza Zambrano Belinda Betzabeth
+  \end{tabular}\par}
+  \note{El integrante 1 abre directamente con el tema. La portada se incluye en sus dos minutos de teoría.}
+\end{frame}
+
+\bloque{Integrante 1}{0:00--0:55}
+\begin{frame}{Cómo se invoca una operación remota}
+  \centering
+  \begin{tikzpicture}
+    \node[nodo] (cli) {Cliente / stub};
+    \node[nodo,right=4.0cm of cli] (srv) {Servidor\\Operación remota};
+    \draw[-Stealth,thick,Azul] ([yshift=2mm]cli.east) -- node[above,font=\small]{Solicitud serializada} ([yshift=2mm]srv.west);
+    \draw[-Stealth,thick,Azul] ([yshift=-2mm]srv.west) -- node[below,font=\small]{Respuesta o error} ([yshift=-2mm]cli.east);
+  \end{tikzpicture}
+  \par\bigskip
+  \raggedright
+  \textbf{RPC} permite invocar una operación de otro proceso. El cliente envía sus parámetros y el servidor devuelve el resultado o un error.
+  \guia{Marca dónde se serializan los datos y explica cuándo el cliente espera la respuesta. Usa la operación que mostrarás en la demo.}
+\end{frame}
+
+\bloque{Integrante 1}{0:55--2:00}
+\begin{frame}{RPC, gRPC y Java RMI}
+  \small
+  \begin{tabularx}{\linewidth}{@{}l*{3}{>{\raggedright\arraybackslash}X}@{}}
+    \toprule
+    & \textbf{RPC} & \textbf{gRPC} \cite{grpc,grpcwire} & \textbf{Java RMI} \cite{oracle}\\
+    \midrule
+    Contrato & Procedimiento remoto & Servicio en \texttt{.proto} & Interfaz remota Java\\
+    Datos & Depende del protocolo & Protobuf por defecto & Serialización Java\\
+    Transporte & Depende del protocolo & HTTP/2 & JRMP sobre TCP\\
+    \bottomrule
+  \end{tabularx}
+  \guia{Distingue un socket de un protocolo. Compara una llamada bloqueante con un cliente que recibe el resultado de forma asíncrona.}
+\end{frame}
+
+\bloque{Integrante 1}{2:00--3:00}
+\begin{frame}{Demo de una llamada remota}
+  \begin{enumerate}
+    \item \textbf{Contrato} \quad \campo{firma del método y tipos de entrada/salida}
+    \item \textbf{Ejecución} \quad \campo{comando del cliente e input de prueba}
+    \item \textbf{Resultado} \quad \campo{respuesta obtenida en el servidor o cliente}
+  \end{enumerate}
+  \guia{Elige un saludo o una suma en gRPC o Java RMI. Deja el servidor iniciado y pon una captura de respaldo con la salida real.}
+  \note{Mostrar una invocación. En gRPC, señalar el método en el .proto. En RMI, señalar la interfaz remota. La demo es un ejercicio independiente. Dar paso al integrante 2 al minuto 3.}
+\end{frame}
+
+\bloque{Integrante 2}{3:00--3:30}
+\begin{frame}{Qué resuelve SGRA}
+  {\large Sistema de Gestión de Refuerzos Académicos \cite{back}}
+  \medskip
+  \begin{itemize}
+    \item \textbf{Problema} \quad \campo{tarea académica que organiza el sistema}
+    \item \textbf{Usuarios} \quad \campo{roles comprobados y una acción de cada uno}
+    \item \textbf{Escala} \quad \campo{cifra, unidad, periodo y fuente}
+  \end{itemize}
+  \guia{Busca una cifra de uso verificable. Si solo tienes datos de un piloto, indica la muestra y cuándo se midió. Marca cualquier proyección como supuesto.}
+\end{frame}
+
+\bloque{Integrante 2}{3:30--5:00}
+\begin{frame}{Arquitectura de SGRA}
+  \centering
+  \begin{tikzpicture}
+    \node[nodo] (front) {Navegador\\Angular};
+    \node[nodo,right=1.7cm of front] (api) {API REST\\Spring Boot};
+    \node[nodo,right=1.7cm of api] (db) {PostgreSQL};
+    \node[nodo,below=1cm of api] (vault) {Azure Key Vault};
+    \draw[enlace] (front) -- node[above,font=\scriptsize]{HTTP} (api);
+    \draw[enlace] (api) -- node[above,font=\scriptsize]{JPA/JDBC} (db);
+    \draw[-Stealth,thick,Azul] (api) -- node[right,font=\scriptsize]{Carga de secretos} (vault);
+  \end{tikzpicture}
+  \par\medskip
+  {\small Vista lógica inicial basada en los repositorios. \cite{front,proxy,back}}
+  \guia{Partan de su bosquejo a mano. Completen el TikZ o sustitúyanlo por su diagrama draw.io. Rotulen qué cruza la red y sigan una operación de punta a punta.}
+  \note{Contrastar la vista lógica con el despliegue utilizado. El proxy local del front documenta una ruta hacia el backend. Agregar Blob Storage si interviene en la operación elegida.}
+\end{frame}
+
+\bloque{Integrante 2}{5:00--6:00}
+\begin{frame}{Transparencias de distribución}
+  \begin{tabularx}{\linewidth}{@{}lXX@{}}
+    \toprule
+    & Tipo de transparencia & Ejemplo en SGRA\\
+    \midrule
+    \textbf{Ofrece} & \campo{nombre y alcance} & \campo{qué detalle queda oculto y para quién}\\[.6em]
+    \textbf{No ofrece} & \campo{nombre y alcance} & \campo{qué detalle se vuelve visible y cuándo}\\
+    \bottomrule
+  \end{tabularx}
+  \guia{Verifica si el proxy local oculta la ubicación del backend para el navegador. Para el segundo ejemplo, comprueba qué ve el usuario si ese backend queda inaccesible.}
+  \note{Indicar para qué actor aplica cada transparencia. Enlazar el ejemplo con una captura, una prueba o un archivo. Entregar el turno al integrante 3 al minuto 6.}
+\end{frame}
+
+\bloque{Integrante 3}{6:00--7:30}
+\begin{frame}{CAP y PACELC en una operación}
+  \textbf{Operación y topología}\quad \campo{acción, datos y réplicas verificadas}
+  \medskip
+
+  \begin{tabularx}{\linewidth}{@{}lX@{}}
+    \toprule
+    \textbf{Con partición} & \campo{enlace interrumpido, respuesta y garantía de consistencia o disponibilidad}\\[.4em]
+    \textbf{Sin partición} & \campo{decisión entre latencia y consistencia, con evidencia o supuesto explícito}\\
+    \bottomrule
+  \end{tabularx}
+  \guia{Si las réplicas no están confirmadas, evita dar una etiqueta global a SGRA. Declara la topología supuesta, qué medirías y qué resultado refutaría la hipótesis.}
+  \note{Describir qué se espera de una lectura o escritura concreta. La pérdida de conexión con PostgreSQL por sí sola no prueba una clasificación CAP. Añadir una fuente técnica o artículo para la interpretación.}
+\end{frame}
+
+\bloque{Integrante 3}{7:30--9:00}
+\begin{frame}{Cómo se comunican los componentes}
+  \begin{itemize}
+    \item \textbf{Modelo observado} \quad Cliente-servidor, API REST sobre HTTP. \cite{proxy,back}
+    \item \textbf{Flujo a mostrar} \quad \campo{método, ruta, formato y respuesta de una operación}
+    \item \textbf{Contraste con la teoría} \quad \campo{cómo sería esa operación con gRPC o Java RMI}
+  \end{itemize}
+  \guia{Muestra una petición real. Explica petición/respuesta y si la UI bloquea o espera de forma asíncrona. Justifica la elección de REST con evidencia o como inferencia.}
+  \note{Distinguir una llamada HTTP de una invocación gRPC o Java RMI. Comparar un recurso REST con un método remoto y sus contratos. Dar paso al integrante 4 al minuto 9.}
+\end{frame}
+
+\bloque{Integrante 4}{9:00--9:40}
+\begin{frame}{Tolerancia a fallos}
+  \textbf{Caso}\quad \campo{fecha, componente, impacto y fuente}
+  \medskip
+  \begin{enumerate}
+    \item \textbf{Detección} \quad \campo{señal o registro y fallo que revela}
+    \item \textbf{Recuperación} \quad \campo{respuesta observada, alcance y límite}
+    \item \textbf{Impacto} \quad \campo{operación afectada, usuarios y duración}
+  \end{enumerate}
+  \guia{El README menciona errores de arranque asociados a Key Vault. Busquen evidencia fechada de un incidente de SGRA. Si hacen una prueba, titúlenla «simulación» e indiquen las condiciones y los resultados. \cite{back}}
+  \note{El apartado de problemas comunes orienta la búsqueda. Para documentar el incidente, reunir evidencia fechada y relacionarla con el impacto.}
+\end{frame}
+
+\bloque{Integrante 4}{9:40--10:30}
+\begin{frame}{Del síntoma a la causa raíz}
+  \centering
+  \begin{tikzpicture}[node distance=9mm]
+    \node[nodo] (sintoma) {\textbf{Síntoma}\\\small\campo{qué se observó}};
+    \node[nodo,right=of sintoma] (causa) {\textbf{Causa raíz}\\\small\campo{qué lo explica}};
+    \node[nodo,right=of causa] (accion) {\textbf{Mitigación}\\\small\campo{qué se cambia}};
+    \draw[-Stealth,thick,Azul] (sintoma) -- (causa);
+    \draw[-Stealth,thick,Azul] (causa) -- (accion);
+  \end{tikzpicture}
+  \par\bigskip
+  \raggedright
+  \textbf{Evidencia}\quad \campo{registro fechado, prueba o fuente que confirma la causa}
+  \guia{Aplica el método de FORM-AC-01. Distingue qué disparó el fallo, qué lo hizo posible y cómo comprobarías que la mitigación funciona.}
+\end{frame}
+
+\bloque{Integrante 4}{10:30--11:15}
+\begin{frame}{Comparación con un sistema real}
+  \begin{tabularx}{\linewidth}{@{}lXX@{}}
+    \toprule
+    \textbf{Criterio} & \textbf{SGRA} & \textbf{\campo{sistema comparable}}\\
+    \midrule
+    Flujo equivalente & \campo{evidencia de SGRA} & \campo{función y fuente}\\[.4em]
+    Decisión técnica & \campo{fortaleza o límite} & \campo{fortaleza o límite}\\
+    \bottomrule
+  \end{tabularx}
+  \guia{Elige un sistema que cubra el mismo flujo académico. Cierra con una postura que mencione la ventaja y el costo de la decisión comparada.}
+\end{frame}
+
+\bloque{Integrante 4}{11:15--12:00}
+\begin{frame}{Lecciones para el PFC}
+  \begin{itemize}
+    \item \textbf{Decisión} \quad \campo{qué mantener o cambiar en el PFC}
+    \item \textbf{Validación} \quad \campo{prueba, métrica y resultado esperado}
+    \item \textbf{Conclusión} \quad \campo{hallazgo concreto sobre SGRA y su comunicación}
+  \end{itemize}
+  \guia{Vincula tu propuesta con un hallazgo anterior. Si propones gRPC, identifica entre qué componentes y bajo qué condición aportaría valor.}
+\end{frame}
+
+\bloque{Todo el equipo}{12:00--15:00}
+\begin{frame}{Preguntas}
+  \textbf{¿Qué cambiaría si una operación de SGRA usara gRPC?}\par
+  \medskip
+  {\small Contrato del servicio \quad / \quad Fallos de red \quad / \quad Medición}
+  \guia{Ensayen los cuatro bloques entre todos. Preparen también una pregunta crítica para otro equipo.}
+\end{frame}
+
+\appendix
+\bloque{Anexo}{Fuera de los 12 minutos}
+\begin{frame}{Referencias de RPC, gRPC y Java RMI}
+  \small
+  \printbibliography[heading=none,keyword=teoria]
+  \note{Completar al menos seis fuentes de los últimos cinco años, con tres artículos de revistas indexadas y DOI verificable.}
+\end{frame}
+
+\begin{frame}{Fuentes técnicas de SGRA}
+  \small
+  \printbibliography[heading=none,notkeyword=teoria]
+\end{frame}
+\end{document}
