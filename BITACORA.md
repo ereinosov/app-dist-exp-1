@@ -57,7 +57,7 @@ Las entradas se reconstruyeron a partir del historial de Git, con fechas de Ecua
 - **Cómo lo resolví** — Seleccioné las páginas, marqué los pasajes pertinentes y guardé las capturas con nombres que indican el tema, el autor y la página. Cada imagen incluye el DOI y conserva el número de página.
 - **Tiempo dedicado** — Por confirmar.
 
-- ### 2026-11-15 · `XXXXXXX`
+- ### 2026-11-15 · `Diagrama de arquitectura`
 
 - **Autoría en Git** — Allison Mera (`ameraj2-bit`).
 - **Qué hice** — Elaboré el diagrama de arquitectura del supuesto de SGRA distribuido en seis microservicios comunicados por gRPC y lo guardé como `diagrama/arquitectura-sgra.drawio`.
