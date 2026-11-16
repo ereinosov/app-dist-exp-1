@@ -1,9 +1,9 @@
 % Compilar desde notas:
 % pdflatex main.tex -> biber main -> pdflatex main.tex -> pdflatex main.tex
-\documentclass[11pt,a4paper]{article}
+\documentclass[10pt,a4paper]{article}
 \usepackage[T1]{fontenc}
 \usepackage[spanish]{babel}
-\usepackage[margin=24mm]{geometry}
+\usepackage[margin=20mm]{geometry}
 \usepackage{mathptmx}
 \usepackage{booktabs,tabularx}
 \usepackage{graphicx}
@@ -13,6 +13,7 @@
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{.55em}
+\setlength{\emergencystretch}{2em}
 \renewcommand{\arraystretch}{1.2}
 
 % Sustituir cada \espacionota por el guion breve de ese apartado.
@@ -45,7 +46,6 @@ Diapositivas 1--4.
 
 \textit{Apoyo visual.} Señalar las tres columnas siguiendo el orden RPC, gRPC y Java RMI. Si preguntan por rendimiento, explicar que depende de la operación, la carga y el entorno medido. La API REST de SGRA se aborda en los bloques siguientes. \cite{kaminski2023,rozek2026,darbord2023}
 
-\newpage
 \section*{Demostración · Conversión de Celsius a Fahrenheit}
 
 \textbf{2:00--2:15 · Presentar el contrato.}
@@ -75,7 +75,7 @@ Terminal B   Cliente: 77.0 F
   del conversor de temperatura para la demostración.\\
   Allison Mera & Presentación de SGRA y su escala con las cifras de la UTEQ. Diagrama de arquitectura del diseño distribuido en draw.io y diapositiva de transparencias. Notas de su turno.\rule{0pt}{5mm}\\
   Eduardo Reinoso & Diapositivas de CAP/PACELC y de comunicación. Análisis del código de reprogramación de solicitudes. Fuentes de CAP y notas de su turno.\rule{0pt}{5mm}\\
-  Integrante 4 & \textit{Nombre y aportes por completar.}\rule{0pt}{5mm}\\
+  Byron Loor & Cierre sobre tolerancia a fallos, comparación con TracCloud y propuestas para el PFC. Diapositivas y notas de su turno.\rule{0pt}{5mm}\\
   \bottomrule
 \end{tabularx}
 
@@ -87,7 +87,8 @@ para formalizar la redacción de las diapositivas.
 \textbf{Eduardo Reinoso.} Herramienta: Claude (Anthropic), versión Claude Sonnet 5.5. Uso: apoyo para ordenar la lectura del código de \texttt{back-SGRA}, redactar borradores de mis dos diapositivas y de este guion, y localizar una fuente sobre CAP y PACELC. Verificación: contrasté la definición de PACELC con el PDF de la fuente (captura anotada en \texttt{evidencias/capturas-fuentes/}).
 
 \textbf{Allison Mera.} Herramienta: Claude (Anthropic), versión Claude Opus 5.5. Uso: Apoyo para definir el supuesto de distribución de SGRA, redactar borradores de mis tres diapositivas y de este guion, y resolver problemas de compilación. Verificación: Confirmé el flujo del sistema con la autora de SGRA, revisé el diagrama componente por componente y comprobé las cifras de escala en la página oficial de la UTEQ.
-\newpage
+
+\textbf{Byron Loor.} Se usó OpenAI Codex para cotejar el informe del SGRA, el cambio público del PR \#55 y la documentación de TracCloud, y preparar un borrador del cierre.
 \section*{Integrante 2 · Presentación de SGRA}
 
 \textbf{Responsable} \quad Allison Michelle Mera Jumbo \hfill \textbf{Turno} \quad 3:00--6:00
@@ -114,7 +115,7 @@ para formalizar la redacción de las diapositivas.
 \textbf{Responsable} \quad Eduardo David Reinoso Vélez \hfill \textbf{Turno} \quad 6:00--9:00
 
 \textbf{CAP y PACELC (6:00--7:30).}
-«Analizo una sola operación: el docente reprograma una sesión, \texttt{PUT /api/teacher/requests/\{id\}/reschedule}. En el código hay una sola URL JDBC hacia PostgreSQL en Azure y la operación corre dentro de una transacción que llama a una función de la base. No pude verificar réplicas, así que declaro un supuesto: primario único. Si se corta la conexión entre la aplicación y la base, el pool espera 10 segundos y la petición termina en error: no entrega datos viejos, así que prioriza consistencia sobre disponibilidad. Sin partición, con un solo nodo no hay dilema entre latencia y consistencia. El correo sale aparte con \texttt{@Async}: si falla, solo se registra el error. En el diseño supuesto del equipo, Refuerzos y Notificaciones son servicios separados y ya no comparten transacción: si falla \texttt{NotificarReprogramacion()} hay que elegir entre revertir o confirmar y reintentar el aviso. Todo esto sale de leer el código; la prueba propuesta es bloquear el puerto 5432 y medir el tiempo hasta el error».
+«Analizo una sola operación: el docente reprograma una sesión,\\ \texttt{PUT /api/teacher/requests/\{id\}/reschedule}. En el código hay una sola URL JDBC hacia PostgreSQL en Azure y la operación corre dentro de una transacción que llama a una función de la base. No pude verificar réplicas, así que declaro un supuesto: primario único. Si se corta la conexión entre la aplicación y la base, el pool espera 10 segundos y la petición termina en error: no entrega datos viejos, así que prioriza consistencia sobre disponibilidad. Sin partición, con un solo nodo no hay dilema entre latencia y consistencia. El correo sale aparte con \texttt{@Async}: si falla, solo se registra el error. En el diseño supuesto del equipo, Refuerzos y Notificaciones son servicios separados y ya no comparten transacción: si falla \texttt{NotificarReprogramacion()} hay que elegir entre revertir o confirmar y reintentar el aviso. Todo esto sale de leer el código; la prueba propuesta es bloquear el puerto 5432 y medir el tiempo hasta el error».
 \cite{back,ahmed2023}
 
 \textit{Apoyo visual.} Señalar en la tabla la fila de partición y la del aviso. Marcar qué está verificado y qué es supuesto.
@@ -124,19 +125,24 @@ para formalizar la redacción de las diapositivas.
 
 \textit{Preguntas previas.} ¿Por qué prioriza consistencia si el sistema falla? CAP habla de sistemas replicados; con un nodo no hay elección real, por eso es un supuesto con prueba propuesta. ¿Cómo sabes que no hay réplicas? No lo sé: el código muestra un solo \emph{endpoint}. ¿Por qué REST hoy? No está documentado; es un supuesto. ¿Por qué un Gateway? \textit{Verificar en la documentación de gRPC antes de responder.}
 
-\newpage
 \section*{Integrante 4 · Fallos, comparación y cierre}
 
-\textbf{Responsable} \quad [Nombre] \hfill \textbf{Turno} \quad 9:00--12:00
+\textbf{Responsable} \quad Byron Daniel Loor Mendoza \hfill \textbf{Turno} \quad 9:00--12:00
 
-\textbf{Tolerancia a fallos.} Añadir el incidente, la evidencia, el impacto, la recuperación y el análisis de causa raíz según FORM-AC-01.
-\espacionota
+\textbf{Tolerancia a fallos (9:00--10:30).}
+«El SGRA ya se protege de un fallo externo. Cuando Coordinación carga un Excel, el backend consulta a Groq. Si hay un error o pasan diez segundos sin respuesta, activa un validador local en Java. La revisión continúa con reglas fijas y un error crítico impide consolidar la carga. Ese comportamiento se comprobó en pruebas de integración». \cite[pp.~66 y 142]{informeSgra}
 
-\textbf{Comparación crítica.} Identificar un sistema comparable y explicar una fortaleza, una limitación y el compromiso entre ambas.
-\espacionota
+«El 21 de marzo de 2026 se corrigió un fallo real del registro de asistencia. El backend enviaba el identificador del participante como \texttt{participantId} en el JSON que recibía PostgreSQL. El PR \#55 cambió esa clave por \texttt{participantid}. De ese cambio inferimos un desajuste entre Java y la función de la base de datos: en JSON, las mayúsculas cambian el nombre de la clave. El arreglo se integró el mismo día. El PR registra la corrección en el código y deja abiertos el alcance y el tiempo de afectación». \cite{sgraAsistencia}
 
-\textbf{Lecciones y conclusiones.} Escribir qué decisión aplicarían al PFC, cómo la validarían y qué aprendieron del análisis de SGRA.
-\espacionota
+\textbf{Comparación crítica (10:30--11:15).}
+«SGRA y TracCloud permiten programar apoyo académico. En SGRA el estudiante hace una solicitud y el docente puede aceptarla o reprogramarla. Eso da al docente control sobre su agenda, con el costo de tramitar cada solicitud. En Ohio University, TracCloud deja escoger un horario disponible y confirmarlo directamente. La reserva es más inmediata, pero el centro necesita mantener sus horarios al día». \cite{informeSgra,traccloudOhio}
+
+\begin{samepage}
+\textbf{Lecciones y conclusiones (11:15--12:00).}
+«Para el PFC proponemos probar en cada cambio el registro de asistencia contra PostgreSQL, comprobando que podemos volver a leer el dato guardado. En el diseño con gRPC, Refuerzos guardaría el horario y el aviso pendiente en la misma transacción. Si Notificaciones responde \texttt{UNAVAILABLE}, el horario queda confirmado y un proceso en segundo plano reintenta el aviso. La prueba sería simular ese fallo, verificar el horario guardado y comprobar que el aviso se procesa al recuperar el servicio».
+
+
+\end{samepage}
 
 \section*{Anexo · Bosquejo inicial de arquitectura}
 
@@ -153,7 +159,7 @@ para formalizar la redacción de las diapositivas.
   \end{center}
 }
 
-{\footnotesize
+{\footnotesize\raggedright
 \setlength{\bibitemsep}{2pt}
 \printbibliography[title={Referencias}]
 }
