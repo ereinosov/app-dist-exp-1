@@ -241,19 +241,24 @@
   \note{Indicar para qué actor aplica cada transparencia. Enlazar el ejemplo con una captura, una prueba o un archivo. Entregar el turno al integrante 3 al minuto 6.}
 \end{frame}
 
-\bloque{Integrante 3}
+\bloque{Eduardo Reinoso}
 \begin{frame}{CAP y PACELC en una operación}
-  \textbf{Operación y topología}\quad \campo{acción, datos y réplicas verificadas}
-  \medskip
+  \small
+  \textbf{Operación}\quad El docente reprograma una sesión, \texttt{PUT \dots/reschedule}. \cite{backctrl}
+  \smallskip
 
-  \begin{tabularx}{\linewidth}{@{}lX@{}}
+  \begin{tabularx}{\linewidth}{@{}>{\bfseries}l>{\raggedright\arraybackslash}X@{}}
     \toprule
-    \textbf{Con partición} & \campo{enlace interrumpido, respuesta y garantía de consistencia o disponibilidad}\\[.4em]
-    \textbf{Sin partición} & \campo{decisión entre latencia y consistencia, con evidencia o supuesto explícito}\\
+    Topología & Una BD PostgreSQL en Azure, una transacción. Réplicas sin verificar: \textbf{supuesto}. \cite{backprops,backrepo}\\[.1em]
+    Con partición & Espera 10 s y falla; no sirve datos viejos: \textbf{C sobre A}. \cite{backprops}\\[.1em]
+    Sin partición & Un solo nodo: no hay dilema entre latencia y consistencia (supuesto).\\[.1em]
+    El aviso & Hoy sale con \texttt{@Async} y puede perderse. \cite{backmail} \emph{Supuesto del equipo (gRPC):} sin transacción común; si falla \texttt{NotificarReprogramacion()}, revertir (C) o confirmar y reintentar (A).\\
     \bottomrule
   \end{tabularx}
-  \guia{Si las réplicas no están confirmadas, evita dar una etiqueta global a SGRA. Declara la topología supuesta, qué medirías y qué resultado refutaría la hipótesis.}
-  \note{Describir qué se espera de una lectura o escritura concreta. La pérdida de conexión con PostgreSQL por sí sola no prueba una clasificación CAP. Añadir una fuente técnica o artículo para la interpretación.}
+  \par\smallskip
+  {\scriptsize PACELC: con partición, elegir A o C; sin partición, latencia o consistencia. \cite{abadi2012}
+  \textbf{Prueba propuesta, no ejecutada:} bloquear el puerto 5432 y medir el tiempo hasta el error (cerca de 10 s).\par}
+  \note{Operación concreta: reprogramar una sesión aceptada, el mismo ejemplo naranja del diagrama. Con la BD inaccesible, el pool espera 10 s (connection-timeout=10000) y el controlador responde 500. No hay lectura vieja posible porque todo pasa por un nodo. Es lectura del código, no una medición: por eso la prueba queda propuesta. Si no hay partición, con primario único no existe el dilema latencia contra consistencia. Hoy el correo queda fuera de la transacción. En el diseño supuesto con servicios y bases separadas ya no hay una transacción común: si falla el aviso hay que elegir entre revertir la reprogramación o confirmarla y reintentar el aviso; el equipo debe decidir cuál defiende. Si preguntan por Azure Blob: Microsoft documenta replicación síncrona en la región primaria y asíncrona hacia la secundaria en GRS; falta confirmar qué usa la cuenta de SGRA.}
 \end{frame}
 
 \bloque{Integrante 3}
