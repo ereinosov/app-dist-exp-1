@@ -10,12 +10,14 @@
 % En SGA va una página de identificación y URL completa del repositorio público.
 \documentclass[aspectratio=169,12pt]{beamer}
 \usepackage[T1]{fontenc}
-\usepackage[scaled=.95]{helvet}
+\usepackage{mathptmx}
+\usefonttheme{serif}
 \usepackage[spanish,es-nodecimaldot,es-notilde]{babel}
 \usepackage{tikz,booktabs,tabularx}
 \usetikzlibrary{positioning,arrows.meta}
 \usepackage[backend=biber,style=ieee]{biblatex}
 \addbibresource{../evidencias/capturas-fuentes/referencias.bib}
+\DeclareFieldFormat[online]{url}{\href{#1}{Ver archivo}}
 \setbeameroption{hide notes}
 
 \newif\ifguias
@@ -58,7 +60,7 @@
   \end{beamercolorbox}}
 \renewcommand{\arraystretch}{1.23}
 \newcommand{\turno}{}
-\newcommand{\bloque}[2]{\renewcommand{\turno}{#1 \quad\textbar\quad #2}}
+\newcommand{\bloque}[1]{\renewcommand{\turno}{#1}}
 \newcommand{\campo}[1]{\textcolor{Azul}{[#1]}}
 \newcommand{\guia}[1]{\ifguias\par\medskip
   \begin{beamercolorbox}[wd=\linewidth,sep=1.05ex]{guia}
@@ -107,7 +109,7 @@
   \note{El integrante 1 abre directamente con el tema. La portada se incluye en sus dos minutos de teoría.}
 \end{frame}
 
-\bloque{Integrante 1}{0:00--0:55}
+\bloque{Belinda Toaquiza}
 \begin{frame}{Cómo se invoca una operación remota}
   \centering
   \begin{tikzpicture}
@@ -118,26 +120,61 @@
   \end{tikzpicture}
   \par\bigskip
   \raggedright
-  \textbf{RPC} permite invocar una operación de otro proceso. El cliente envía sus parámetros y el servidor devuelve el resultado o un error.
-  \guia{Marca dónde se serializan los datos y explica cuándo el cliente espera la respuesta. Usa la operación que mostrarás en la demo.}
+  \textbf{RPC} permite ejecutar una operación en otro proceso. El \emph{stub} del cliente convierte los argumentos en bytes para enviarlos al servidor. \cite{seemakhupt2023,kazanavicius2023}
+  \par\medskip
+  \begin{beamercolorbox}[wd=\linewidth,sep=1ex]{guia}
+    \texttt{sumar(3, 4)} \enspace $\longrightarrow$ \enspace
+    el servidor calcula \enspace $\longrightarrow$ \enspace \texttt{7}
+  \end{beamercolorbox}
+  \note{Señala la ida y la vuelta en el diagrama. Una llamada bloqueante detiene el hilo que la invoca mientras espera; en una llamada no bloqueante ese hilo puede continuar. Véase la guía del integrante 1 para el guion completo.}
 \end{frame}
 
-\bloque{Integrante 1}{0:55--2:00}
-\begin{frame}{RPC, gRPC y Java RMI}
-  \small
-  \begin{tabularx}{\linewidth}{@{}l*{3}{>{\raggedright\arraybackslash}X}@{}}
-    \toprule
-    & \textbf{RPC} & \textbf{gRPC} \cite{grpc,grpcwire} & \textbf{Java RMI} \cite{oracle}\\
-    \midrule
-    Contrato & Procedimiento remoto & Servicio en \texttt{.proto} & Interfaz remota Java\\
-    Datos & Depende del protocolo & Protobuf por defecto & Serialización Java\\
-    Transporte & Depende del protocolo & HTTP/2 & JRMP sobre TCP\\
-    \bottomrule
-  \end{tabularx}
-  \guia{Distingue un socket de un protocolo. Compara una llamada bloqueante con un cliente que recibe el resultado de forma asíncrona.}
+\bloque{Belinda Toaquiza}
+\begin{frame}[label=comparacion-teoria]{RPC, gRPC y Java RMI}
+  \begin{columns}[onlytextwidth,T]
+    \begin{column}{.28\linewidth}
+      \begin{tikzpicture}[x=1cm,y=1cm,draw=Azul,thick]
+        \path[use as bounding box] (0,0) rectangle (1,.75);
+        \draw[-Stealth] (.05,.53)--(.93,.53);
+        \draw[-Stealth] (.93,.24)--(.05,.24);
+      \end{tikzpicture}\par
+      \smallskip
+      {\large\bfseries RPC}\par
+      \medskip
+      {\small Una llamada a un procedimiento remoto.\par}
+    \end{column}
+    \begin{column}{.32\linewidth}
+      \begin{tikzpicture}[x=1cm,y=1cm,draw=Azul,thick]
+        \path[use as bounding box] (0,0) rectangle (1,.75);
+        \draw (.17,.06)--(.17,.69)--(.62,.69)--(.82,.49)--(.82,.06)--cycle;
+        \draw (.62,.69)--(.62,.49)--(.82,.49) (.30,.36)--(.68,.36) (.30,.22)--(.68,.22);
+      \end{tikzpicture}\par
+      \smallskip
+      {\large\bfseries gRPC}\par
+      \medskip
+      {\small Método de un servicio definido en \texttt{.proto}.\par
+      \smallskip Protocol Buffers por defecto y HTTP/2. \cite{kaminski2023,rozek2026}\par}
+    \end{column}
+    \begin{column}{.30\linewidth}
+      \begin{tikzpicture}[x=1cm,y=1cm,draw=Azul,thick]
+        \path[use as bounding box] (0,0) rectangle (1,.75);
+        \draw (.13,.52)--(.49,.69)--(.85,.52)--(.49,.35)--cycle;
+        \draw (.13,.52)--(.13,.22)--(.49,.05)--(.85,.22)--(.85,.52) (.49,.35)--(.49,.05);
+      \end{tikzpicture}\par
+      \smallskip
+      {\large\bfseries Java RMI}\par
+      \medskip
+      {\small Método de un objeto en otra JVM.\par
+      \smallskip Interfaz \texttt{Remote}, serialización Java y JRMP. \cite{darbord2023}\par}
+    \end{column}
+  \end{columns}
+  \par\bigskip
+  {\footnotesize \textbf{Socket} \enspace Interfaz que usa el sistema para comunicarse por red.
+    \hfill \hyperlink{fuentes-teoria}{\beamergotobutton{Fuentes}}}
+  \note{gRPC permite interoperar entre lenguajes que comparten el contrato. Java RMI opera entre JVM y el stub representa un objeto remoto. HTTP/2 transporta mensajes; Protocol Buffers permite definirlos y codificarlos.}
 \end{frame}
 
-\bloque{Integrante 1}{2:00--3:00}
+\bloque{Belinda Toaquiza}
 \begin{frame}{Demo de una llamada remota}
   \begin{enumerate}
     \item \textbf{Contrato} \quad \campo{firma del método y tipos de entrada/salida}
@@ -148,7 +185,7 @@
   \note{Mostrar una invocación. En gRPC, señalar el método en el .proto. En RMI, señalar la interfaz remota. La demo es un ejercicio independiente. Dar paso al integrante 2 al minuto 3.}
 \end{frame}
 
-\bloque{Integrante 2}{3:00--3:30}
+\bloque{Integrante 2}
 \begin{frame}{Qué resuelve SGRA}
   {\large Sistema de Gestión de Refuerzos Académicos \cite{back}}
   \medskip
@@ -160,7 +197,7 @@
   \guia{Busca una cifra de uso verificable. Si solo tienes datos de un piloto, indica la muestra y cuándo se midió. Marca cualquier proyección como supuesto.}
 \end{frame}
 
-\bloque{Integrante 2}{3:30--5:00}
+\bloque{Integrante 2}
 \begin{frame}{Arquitectura de SGRA}
   \centering
   \begin{tikzpicture}
@@ -178,7 +215,7 @@
   \note{Contrastar la vista lógica con el despliegue utilizado. El proxy local del front documenta una ruta hacia el backend. Agregar Blob Storage si interviene en la operación elegida.}
 \end{frame}
 
-\bloque{Integrante 2}{5:00--6:00}
+\bloque{Integrante 2}
 \begin{frame}{Transparencias de distribución}
   \begin{tabularx}{\linewidth}{@{}lXX@{}}
     \toprule
@@ -192,7 +229,7 @@
   \note{Indicar para qué actor aplica cada transparencia. Enlazar el ejemplo con una captura, una prueba o un archivo. Entregar el turno al integrante 3 al minuto 6.}
 \end{frame}
 
-\bloque{Integrante 3}{6:00--7:30}
+\bloque{Integrante 3}
 \begin{frame}{CAP y PACELC en una operación}
   \textbf{Operación y topología}\quad \campo{acción, datos y réplicas verificadas}
   \medskip
@@ -207,7 +244,7 @@
   \note{Describir qué se espera de una lectura o escritura concreta. La pérdida de conexión con PostgreSQL por sí sola no prueba una clasificación CAP. Añadir una fuente técnica o artículo para la interpretación.}
 \end{frame}
 
-\bloque{Integrante 3}{7:30--9:00}
+\bloque{Integrante 3}
 \begin{frame}{Cómo se comunican los componentes}
   \begin{itemize}
     \item \textbf{Modelo observado} \quad Cliente-servidor, API REST sobre HTTP. \cite{proxy,back}
@@ -218,7 +255,7 @@
   \note{Distinguir una llamada HTTP de una invocación gRPC o Java RMI. Comparar un recurso REST con un método remoto y sus contratos. Dar paso al integrante 4 al minuto 9.}
 \end{frame}
 
-\bloque{Integrante 4}{9:00--9:40}
+\bloque{Integrante 4}
 \begin{frame}{Tolerancia a fallos}
   \textbf{Caso}\quad \campo{fecha, componente, impacto y fuente}
   \medskip
@@ -231,7 +268,7 @@
   \note{El apartado de problemas comunes orienta la búsqueda. Para documentar el incidente, reunir evidencia fechada y relacionarla con el impacto.}
 \end{frame}
 
-\bloque{Integrante 4}{9:40--10:30}
+\bloque{Integrante 4}
 \begin{frame}{Del síntoma a la causa raíz}
   \centering
   \begin{tikzpicture}[node distance=9mm]
@@ -247,7 +284,7 @@
   \guia{Aplica el método de FORM-AC-01. Distingue qué disparó el fallo, qué lo hizo posible y cómo comprobarías que la mitigación funciona.}
 \end{frame}
 
-\bloque{Integrante 4}{10:30--11:15}
+\bloque{Integrante 4}
 \begin{frame}{Comparación con un sistema real}
   \begin{tabularx}{\linewidth}{@{}lXX@{}}
     \toprule
@@ -260,7 +297,7 @@
   \guia{Elige un sistema que cubra el mismo flujo académico. Cierra con una postura que mencione la ventaja y el costo de la decisión comparada.}
 \end{frame}
 
-\bloque{Integrante 4}{11:15--12:00}
+\bloque{Integrante 4}
 \begin{frame}{Lecciones para el PFC}
   \begin{itemize}
     \item \textbf{Decisión} \quad \campo{qué mantener o cambiar en el PFC}
@@ -270,7 +307,7 @@
   \guia{Vincula tu propuesta con un hallazgo anterior. Si propones gRPC, identifica entre qué componentes y bajo qué condición aportaría valor.}
 \end{frame}
 
-\bloque{Todo el equipo}{12:00--15:00}
+\bloque{Todo el equipo}
 \begin{frame}{Preguntas}
   \textbf{¿Qué cambiaría si una operación de SGRA usara gRPC?}\par
   \medskip
@@ -279,15 +316,15 @@
 \end{frame}
 
 \appendix
-\bloque{Anexo}{Fuera de los 12 minutos}
-\begin{frame}{Referencias de RPC, gRPC y Java RMI}
-  \small
-  \printbibliography[heading=none,keyword=teoria]
+\bloque{Anexo}
+\begin{frame}[allowframebreaks=.95]{Referencias}
+  \hypertarget{fuentes-teoria}{}
+  \renewcommand{\bibfont}{\footnotesize}
+  \setlength{\bibitemsep}{3pt}
+  \printbibliography[heading=none]
+  \smallskip
+  \hyperlink{comparacion-teoria}{\beamerreturnbutton{Volver a la comparación}}
   \note{Completar al menos seis fuentes de los últimos cinco años, con tres artículos de revistas indexadas y DOI verificable.}
 \end{frame}
 
-\begin{frame}{Fuentes técnicas de SGRA}
-  \small
-  \printbibliography[heading=none,notkeyword=teoria]
-\end{frame}
 \end{document}
