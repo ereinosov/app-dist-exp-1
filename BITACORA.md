@@ -57,7 +57,7 @@ Las entradas se reconstruyeron a partir del historial de Git, con fechas de Ecua
 - **Cómo lo resolví** — Seleccioné las páginas, marqué los pasajes pertinentes y guardé las capturas con nombres que indican el tema, el autor y la página. Cada imagen incluye el DOI y conserva el número de página.
 - **Tiempo dedicado** — 35 min.
 
-### 2026-11-15 · `Diagrama de arquitectura`
+### 2026-11-15 · `975c6bc`.
 
 - **Autoría en Git** — Allison Mera (`ameraj2-bit`).
 - **Qué hice** — Elaboré el diagrama de arquitectura del supuesto de SGRA distribuido en seis microservicios comunicados por gRPC y lo guardé como `diagrama/arquitectura-sgra.drawio`.
@@ -80,3 +80,11 @@ Las entradas se reconstruyeron a partir del historial de Git, con fechas de Ecua
 - **Problema encontrado** — SGRA hoy es un monolito sin réplicas verificadas, así que el comportamiento ante una partición sale de leer el código y no de una medición. La guía pide además clasificar la comunicación (modelo, sincronía y mecanismo) y mi primera diapositiva solo mostraba flechas.
 - **Cómo lo resolví** — Marqué como supuesto lo no comprobado y dejé la prueba de bloquear el puerto 5432 como propuesta, no ejecutada. Reemplacé la diapositiva por una tabla de modelo, sincronía y mecanismo, reutilicé la bibliografía del repositorio y cambié la fuente de PACELC por un artículo de 2023 con DOI.
 - **Tiempo dedicado** — 2 horas.
+
+### 2026-11-15 · `88dac8a`, `0231512`, `cb6166a`
+
+- **Autoría en Git** — Allison Mera (`ameraj2-bit`).
+- **Qué hice** — Preparé con asistencia de Claude mis tres diapositivas: presentación de SGRA con su escala, arquitectura con el diagrama exportado a PDF y transparencias de distribución. Agregué la referencia de las cifras de la UTEQ al archivo de bibliografía.
+- **Problema encontrado** — Al compilar en Overleaf, las citas aparecían como claves en negrita y faltaba la figura del diagrama. Además, las primeras cifras de escala venían del PEDI 2024 y la página de la UTEQ mostraba datos más recientes.
+- **Cómo lo resolví** — Comprobé que el problema era que Overleaf no tenía el archivo `.bib` ni la figura en la ruta esperada. Exporté el diagrama a PDF recortado, lo subí a `slides/figuras/` y verifiqué que la compilación completa con Biber mostrara las referencias numeradas. Actualicé la escala con las cifras de "UTEQ en cifras" (14 771 estudiantes de grado y 613 docentes) y reorganicé la presentación del sistema en una sola tabla.
+- **Tiempo dedicado** — 1 hora.
