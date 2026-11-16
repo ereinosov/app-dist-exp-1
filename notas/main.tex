@@ -73,7 +73,7 @@ Terminal B   Cliente: 77.0 F
   Belinda Toaquiza & Desarrollo y exposición de la teoría de RPC, gRPC y
   Java RMI. Selección de fuentes y evidencias de lectura. Preparación y prueba
   del conversor de temperatura para la demostración.\\
-  Integrante 2 & \textit{Nombre y aportes por completar.}\rule{0pt}{5mm}\\
+  Allison Mera & Presentación de SGRA y su escala con las cifras de la UTEQ. Diagrama de arquitectura del diseño distribuido en draw.io y diapositiva de transparencias. Notas de su turno.\rule{0pt}{5mm}\\
   Eduardo Reinoso & Diapositivas de CAP/PACELC y de comunicación. Análisis del código de reprogramación de solicitudes. Fuentes de CAP y notas de su turno.\rule{0pt}{5mm}\\
   Integrante 4 & \textit{Nombre y aportes por completar.}\rule{0pt}{5mm}\\
   \bottomrule
@@ -86,18 +86,27 @@ para formalizar la redacción de las diapositivas.
 
 \textbf{Eduardo Reinoso.} Herramienta: Claude (Anthropic), versión Claude Sonnet 5.5. Uso: apoyo para ordenar la lectura del código de \texttt{back-SGRA}, redactar borradores de mis dos diapositivas y de este guion, y localizar una fuente sobre CAP y PACELC. Verificación: contrasté la definición de PACELC con el PDF de la fuente (captura anotada en \texttt{evidencias/capturas-fuentes/}).
 
+\textbf{Allison Mera.} Herramienta: Claude (Anthropic), versión Claude Opus 5.5. Uso: Apoyo para definir el supuesto de distribución de SGRA, redactar borradores de mis tres diapositivas y de este guion, y resolver problemas de compilación. Verificación: Confirmé el flujo del sistema con la autora de SGRA, revisé el diagrama componente por componente y comprobé las cifras de escala en la página oficial de la UTEQ.
 \newpage
 \section*{Integrante 2 · Presentación de SGRA}
 
-\textbf{Responsable} \quad [Nombre] \hfill \textbf{Turno} \quad 3:00--6:00
+\textbf{Responsable} \quad Allison Michelle Mera Jumbo \hfill \textbf{Turno} \quad 3:00--6:00
 
-\textbf{Presentación del sistema.} Anotar el problema, quiénes lo usan y una cifra de escala con su fuente.
-\espacionota
+\textbf{Presentación del sistema (3:00--3:30).}
+«SGRA es el Sistema de Gestión de Refuerzos Académicos. Resuelve un problema concreto: organizar los refuerzos desde que un estudiante los solicita hasta que coordinación obtiene el reporte. Tiene tres roles. El estudiante solicita, el docente acepta, rechaza o reprograma y registra la asistencia, y coordinación carga los datos del semestre y saca reportes. Si se usara en toda la UTEQ, atendería a unos 14\,700 estudiantes de grado y 613 docentes. Es una población potencial, no un uso medido».
+\cite{back,uteqcifras}
 
-\textbf{Arquitectura.} Explicar el diagrama propio siguiendo el recorrido de una operación real.
-\espacionota
+\textbf{Arquitectura (3:30--5:00).}
+«Hoy SGRA es un monolito REST: un frontend en Angular, un backend en Spring Boot y una base PostgreSQL. El diagrama muestra el diseño que propone el equipo para distribuirlo. Los usuarios entran por el cliente Angular, que envía peticiones REST a un API Gateway. El Gateway existe porque el navegador no puede hablar gRPC de forma nativa: recibe REST y lo traduce a gRPC hacia seis servicios. Usuarios maneja el inicio de sesión y los roles; Académico, la carga del semestre; Refuerzos, las solicitudes y la asistencia; Notificaciones, los avisos; Reportes, los PDF y Excel; y el Chatbot, las preguntas rápidas. Cada servicio es dueño de su base de datos. Sigamos la línea naranja: el docente reprograma una sesión, el Gateway llama a Refuerzos, que guarda el nuevo horario y llama a Notificaciones con \texttt{NotificarReprogramacion()} para avisar al estudiante por correo. El Chatbot es la excepción: habla con Groq por REST porque es una API externa».
+\cite{front,back}
 
-\textbf{Transparencias.} Preparar un ejemplo de una transparencia que ofrece SGRA y otro de una que no ofrece.
+\textit{Apoyo visual.} Empezar aclarando qué es real y qué es supuesto. Recorrer el diagrama de arriba hacia abajo y seguir con el puntero la línea naranja.
+
+\textbf{Transparencias (5:00--6:00).}
+«Una transparencia de distribución oculta que el sistema está repartido en varias máquinas. En este diseño, SGRA ofrece transparencia de acceso: para Refuerzos, avisar una reprogramación parece una llamada local, porque el \emph{stub} de gRPC la serializa y la envía por la red. También ofrece transparencia de ubicación: el usuario entra a una sola dirección web y no sabe en qué servidor corre cada servicio, porque el Gateway decide a dónde va cada petición. Lo que no ofrece es transparencia de fallos: si Notificaciones se cae, la llamada devuelve \texttt{UNAVAILABLE} o vence su tiempo límite, y el estudiante no recibe el aviso. Ese fallo se retoma en el bloque de tolerancia a fallos. Ahora Eduardo analiza la misma operación con CAP y PACELC».
+\cite{kaminski2023}
+
+\textit{Preguntas previas.} ¿Esto es el SGRA real? No: hoy es un monolito REST; el diagrama es el diseño del equipo. ¿Por qué el navegador no usa gRPC? Porque no expone el control de HTTP/2 que gRPC necesita; por eso el Gateway traduce. ¿Por qué Reportes no tiene base propia? Porque pide los datos por gRPC a Académico y a Refuerzos, que son sus dueños. ¿Por qué el Chatbot usa REST? Porque Groq es una API externa y la ofrece así.
 \espacionota
 
 \section*{Integrante 3 · Diseño de SGRA}
