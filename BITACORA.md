@@ -55,7 +55,7 @@ Las entradas se reconstruyeron a partir del historial de Git, con fechas de Ecua
 - **Qué hice** — Preparé con asistencia de Codex cinco capturas de los artículos citados en mi bloque de RPC, gRPC y Java RMI.
 - **Problema encontrado** — Los PDF completos y los nombres abreviados dificultaban localizar los pasajes usados en la exposición.
 - **Cómo lo resolví** — Seleccioné las páginas, marqué los pasajes pertinentes y guardé las capturas con nombres que indican el tema, el autor y la página. Cada imagen incluye el DOI y conserva el número de página.
-- **Tiempo dedicado** — Por confirmar.
+- **Tiempo dedicado** — 35 min.
 
 ### 2026-11-15 · `Diagrama de arquitectura`
 
@@ -64,5 +64,13 @@ Las entradas se reconstruyeron a partir del historial de Git, con fechas de Ecua
 - **Problema encontrado** — El SGRA real es un monolito REST sin gRPC, por lo que había que definir un supuesto de distribución que respetara sus funciones reales. Además, el navegador no puede llamar directamente a servicios gRPC.
 - **Cómo lo resolví** — Confirmé con la autora del sistema el flujo real (solicitud, aceptación o reprogramación, asistencia, carga masiva, reportes y chatbot) y asigné cada paso a un servicio. Agregué un API Gateway que recibe REST del cliente Angular y lo traduce a gRPC, y resalté en naranja el flujo de reprogramación entre Refuerzos y Notificaciones como ejemplo.
 - **Tiempo dedicado** — 2 horas.
+
+### 2026-11-15 · Notas grupales de la exposición (`61f34f5`)
+
+- **Autoría en Git** — Belinda Toaquiza (`BelindaTZ`).
+- **Qué hice** — Preparé el documento LaTeX de notas grupales y redacté el guion de teoría y de la demo de Java RMI.
+- **Problema encontrado** — Faltaba integrar mi bloque y dejar espacio para que los demás integrantes añadieran sus notas y aportes.
+- **Cómo lo resolví** — Organicé los cuatro bloques, reservé espacio para el bosquejo y dejé una declaración de uso de IA para todo el equipo. Verifiqué el PDF de cuatro páginas con las referencias al final.
+- **Tiempo dedicado** — 15 min.
 
 
