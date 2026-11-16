@@ -244,21 +244,21 @@
 \bloque{Eduardo Reinoso}
 \begin{frame}{CAP y PACELC en una operación}
   \small
-  \textbf{Operación}\quad El docente reprograma una sesión, \texttt{PUT \dots/reschedule}. \cite{backctrl}
+  \textbf{Operación}\quad El docente reprograma una sesión aceptada: \texttt{PUT \dots/reschedule}.
   \smallskip
 
   \begin{tabularx}{\linewidth}{@{}>{\bfseries}l>{\raggedright\arraybackslash}X@{}}
     \toprule
-    Topología & Una BD PostgreSQL en Azure, una transacción. Réplicas sin verificar: \textbf{supuesto}. \cite{backprops,backrepo}\\[.1em]
-    Con partición & Espera 10 s y falla; no sirve datos viejos: \textbf{C sobre A}. \cite{backprops}\\[.1em]
-    Sin partición & Un solo nodo: no hay dilema entre latencia y consistencia (supuesto).\\[.1em]
-    El aviso & Hoy sale con \texttt{@Async} y puede perderse. \cite{backmail} \emph{Supuesto del equipo (gRPC):} sin transacción común; si falla \texttt{NotificarReprogramacion()}, revertir (C) o confirmar y reintentar (A).\\
+    Topología hoy & Una base PostgreSQL en Azure, una sola transacción. Réplicas sin confirmar: \textbf{supuesto}. \cite{back}\\[.1em]
+    Con partición & Sin conexión a la base, espera 10 s y devuelve error: no confirma el cambio. \textbf{C sobre A}. \cite{back}\\[.1em]
+    Sin partición & Un solo nodo: sin réplicas no hay dilema latencia--consistencia (supuesto).\\[.1em]
+    El aviso & Hoy sale con \texttt{@Async} y puede perderse. \emph{Diseño del equipo:} sin transacción común; si falla, se revierte (C) o se confirma y se reintenta (A).\\
     \bottomrule
   \end{tabularx}
   \par\smallskip
-  {\scriptsize PACELC: con partición, elegir A o C; sin partición, latencia o consistencia. \cite{abadi2012}
-  \textbf{Prueba propuesta, no ejecutada:} bloquear el puerto 5432 y medir el tiempo hasta el error (cerca de 10 s).\par}
-  \note{Operación concreta: reprogramar una sesión aceptada, el mismo ejemplo naranja del diagrama. Con la BD inaccesible, el pool espera 10 s (connection-timeout=10000) y el controlador responde 500. No hay lectura vieja posible porque todo pasa por un nodo. Es lectura del código, no una medición: por eso la prueba queda propuesta. Si no hay partición, con primario único no existe el dilema latencia contra consistencia. Hoy el correo queda fuera de la transacción. En el diseño supuesto con servicios y bases separadas ya no hay una transacción común: si falla el aviso hay que elegir entre revertir la reprogramación o confirmarla y reintentar el aviso; el equipo debe decidir cuál defiende. Si preguntan por Azure Blob: Microsoft documenta replicación síncrona en la región primaria y asíncrona hacia la secundaria en GRS; falta confirmar qué usa la cuenta de SGRA.}
+  {\scriptsize PACELC: con partición, disponibilidad o consistencia; sin partición, latencia o consistencia. \cite{abadi2012}
+\par}
+  \note{Operación concreta: reprogramar una sesión aceptada, el mismo ejemplo naranja del diagrama. En el código hay una sola URL hacia PostgreSQL y la operación corre en una transacción. Si la aplicación no consigue una conexión, el pool espera 10 s (connection-timeout=10000) y el controlador responde 500: no se confirma nada sin la base, por eso digo consistencia sobre disponibilidad. Es lectura del código, no una medición. Prueba propuesta, no ejecutada: bloquear el puerto 5432 y medir el tiempo hasta el error, esperado cerca de 10 s. Sin partición, con primario único no existe el dilema latencia contra consistencia; no verifiqué réplicas, es un supuesto. Hoy el correo queda fuera de la transacción. En el diseño del equipo ya no hay una transacción común: si falla el aviso hay que elegir entre revertir la reprogramación o confirmarla y reintentar el aviso; el equipo debe decidir cuál defiende. Archivos revisados en el commit e28bcfa de back-SGRA: application.properties, TeacherRequestController y TeacherRequestRepositoryImpl. Falta confirmar con el dueño del repositorio la configuración real en Azure.}
 \end{frame}
 
 \bloque{Integrante 3}
