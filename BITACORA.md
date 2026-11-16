@@ -57,10 +57,10 @@ Las entradas se reconstruyeron a partir del historial de Git, con fechas de Ecua
 - **Cómo lo resolví** — Seleccioné las páginas, marqué los pasajes pertinentes y guardé las capturas con nombres que indican el tema, el autor y la página. Cada imagen incluye el DOI y conserva el número de página.
 - **Tiempo dedicado** — 35 min.
 
-### 2026-11-15 · `975c6bc`.
+### 2026-11-15 · `975c6bc`
 
 - **Autoría en Git** — Allison Mera (`ameraj2-bit`).
-- **Qué hice** — Elaboré el diagrama de arquitectura del supuesto de SGRA distribuido en seis microservicios comunicados por gRPC y lo guardé como `diagrama/arquitectura-sgra.drawio`.
+- **Qué hice** — Analicé con asistente Claude el diagrama de arquitectura del supuesto de SGRA distribuido en seis microservicios comunicados por gRPC y lo guardé como `diagrama/arquitectura-sgra.drawio`.
 - **Problema encontrado** — El SGRA real es un monolito REST sin gRPC, por lo que había que definir un supuesto de distribución que respetara sus funciones reales. Además, el navegador no puede llamar directamente a servicios gRPC.
 - **Cómo lo resolví** — Confirmé con la autora del sistema el flujo real (solicitud, aceptación o reprogramación, asistencia, carga masiva, reportes y chatbot) y asigné cada paso a un servicio. Agregué un API Gateway que recibe REST del cliente Angular y lo traduce a gRPC, y resalté en naranja el flujo de reprogramación entre Refuerzos y Notificaciones como ejemplo.
 - **Tiempo dedicado** — 2 horas.
@@ -88,3 +88,11 @@ Las entradas se reconstruyeron a partir del historial de Git, con fechas de Ecua
 - **Problema encontrado** — Al compilar en Overleaf, las citas aparecían como claves en negrita y faltaba la figura del diagrama. Además, las primeras cifras de escala venían del PEDI 2024 y la página de la UTEQ mostraba datos más recientes.
 - **Cómo lo resolví** — Comprobé que el problema era que Overleaf no tenía el archivo `.bib` ni la figura en la ruta esperada. Exporté el diagrama a PDF recortado, lo subí a `slides/figuras/` y verifiqué que la compilación completa con Biber mostrara las referencias numeradas. Actualicé la escala con las cifras de "UTEQ en cifras" (14 771 estudiantes de grado y 613 docentes) y reorganicé la presentación del sistema en una sola tabla.
 - **Tiempo dedicado** — 1 hora.
+
+### 2026-11-15 · `8efa065`
+
+- **Autoría en Git** — Allison Mera (`ameraj2-bit`).
+- **Qué hice** — Completé el guion de presentación de SGRA, arquitectura y transparencias, con sus tiempos y preguntas previstas. Agregué mi fila en la tabla de aportes y mi declaración de uso de IA.
+- **Problema encontrado** — El guion debía ajustarse a mis tres minutos sin repetir la teoría del integrante 1 y dejando claro qué parte del sistema es real y cuál es supuesto.
+- **Cómo lo resolví** — Distribuí el guion en 30 segundos, un minuto y medio y un minuto, empecé la arquitectura aclarando que hoy SGRA es un monolito REST y cerré las transparencias con el paso hacia CAP y PACELC. Compilé las notas para verificar que mis referencias aparecieran numeradas.
+- **Tiempo dedicado** — 15 min.
