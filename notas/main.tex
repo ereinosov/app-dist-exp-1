@@ -74,7 +74,7 @@ Terminal B   Cliente: 77.0 F
   Java RMI. Selección de fuentes y evidencias de lectura. Preparación y prueba
   del conversor de temperatura para la demostración.\\
   Integrante 2 & \textit{Nombre y aportes por completar.}\rule{0pt}{5mm}\\
-  Integrante 3 & \textit{Nombre y aportes por completar.}\rule{0pt}{5mm}\\
+  Eduardo Reinoso & Diapositivas de CAP/PACELC y de comunicación. Análisis del código de reprogramación de solicitudes. Fuentes de CAP y notas de su turno.\rule{0pt}{5mm}\\
   Integrante 4 & \textit{Nombre y aportes por completar.}\rule{0pt}{5mm}\\
   \bottomrule
 \end{tabularx}
@@ -83,6 +83,8 @@ Terminal B   Cliente: 77.0 F
 
 Se utilizó inteligencia artificial como apoyo para la búsqueda de fuentes y
 para formalizar la redacción de las diapositivas.
+
+\textbf{Eduardo Reinoso.} Herramienta: Claude (Anthropic), versión Claude Sonnet 5.5. Uso: apoyo para ordenar la lectura del código de \texttt{back-SGRA}, redactar borradores de mis dos diapositivas y de este guion, y localizar una fuente sobre CAP y PACELC. Verificación: contrasté la definición de PACELC con el PDF de la fuente (captura anotada en \texttt{evidencias/capturas-fuentes/}).
 
 \newpage
 \section*{Integrante 2 · Presentación de SGRA}
@@ -100,13 +102,18 @@ para formalizar la redacción de las diapositivas.
 
 \section*{Integrante 3 · Diseño de SGRA}
 
-\textbf{Responsable} \quad [Nombre] \hfill \textbf{Turno} \quad 6:00--9:00
+\textbf{Responsable} \quad Eduardo David Reinoso Vélez \hfill \textbf{Turno} \quad 6:00--9:00
 
-\textbf{CAP y PACELC.} Precisar la operación y la topología. Explicar qué se prioriza con y sin partición, indicando qué está verificado y qué es un supuesto.
-\espacionota
+\textbf{CAP y PACELC (6:00--7:30).}
+«Analizo una sola operación: el docente reprograma una sesión, \texttt{PUT /api/teacher/requests/\{id\}/reschedule}. En el código hay una sola URL JDBC hacia PostgreSQL en Azure y la operación corre dentro de una transacción que llama a una función de la base. No pude verificar réplicas, así que declaro un supuesto: primario único. Si se corta la conexión entre la aplicación y la base, el pool espera 10 segundos y la petición termina en error: no entrega datos viejos, así que prioriza consistencia sobre disponibilidad. Sin partición, con un solo nodo no hay dilema entre latencia y consistencia. El correo sale aparte con \texttt{@Async}: si falla, solo se registra el error. En el diseño supuesto del equipo, Refuerzos y Notificaciones son servicios separados y ya no comparten transacción: si falla \texttt{NotificarReprogramacion()} hay que elegir entre revertir o confirmar y reintentar el aviso. Todo esto sale de leer el código; la prueba propuesta es bloquear el puerto 5432 y medir el tiempo hasta el error».
+\cite{back,ahmed2023}
 
-\textbf{Comunicación.} Mostrar una petición real del frontend a la API REST y relacionarla con el modelo cliente-servidor y con los conceptos de la apertura.
-\espacionota
+\textit{Apoyo visual.} Señalar en la tabla la fila de partición y la del aviso. Marcar qué está verificado y qué es supuesto.
+
+\textbf{Modelos de comunicación (7:30--9:00).}
+«Sigo con la misma operación. Hoy el navegador envía un \texttt{PUT} y espera la respuesta: es cliente--servidor y síncrono. El controlador responde 400 si falta un dato, 200 si sale bien, 409 si la función de PostgreSQL devuelve error y 500 ante una excepción. El correo es la parte asíncrona, con \texttt{@Async}. Hoy no hay llamadas remotas internas: SGRA es un monolito REST. En el diseño del equipo, el Gateway traduce REST a gRPC y Refuerzos llama a Notificaciones; sigue siendo cliente--servidor y síncrono. gRPC encaja porque el contrato se escribe en un \texttt{.proto} sobre HTTP/2; RMI queda descartado porque exige un cliente Java y el de SGRA es Angular. Por qué SGRA eligió REST no está documentado: es un supuesto».\n\cite{back,kaminski2023,rozek2026,darbord2023}
+
+\textit{Preguntas previas.} ¿Por qué prioriza consistencia si el sistema falla? CAP habla de sistemas replicados; con un nodo no hay elección real, por eso es un supuesto con prueba propuesta. ¿Cómo sabes que no hay réplicas? No lo sé: el código muestra un solo \emph{endpoint}. ¿Por qué REST hoy? No está documentado; es un supuesto. ¿Por qué un Gateway? \textit{Verificar en la documentación de gRPC antes de responder.}
 
 \newpage
 \section*{Integrante 4 · Fallos, comparación y cierre}

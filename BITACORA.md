@@ -22,7 +22,7 @@ Las entradas se reconstruyeron a partir del historial de Git, con fechas de Ecua
 - **Qué hice** — Inicialicé el repositorio y agregué el README con los datos del equipo.
 - **Problema encontrado** — No se registró un bloqueo técnico. Faltaba organizar los archivos de la exposición.
 - **Cómo lo resolví** — Creé las carpetas para diapositivas, notas, diagrama y evidencias, con archivos `.gitkeep` para conservar la estructura inicial.
-- **Tiempo dedicado** — Por confirmar.
+- **Tiempo dedicado** — 10 min.
 
 ### 2026-11-15 · `c35c5f7`
 
@@ -73,4 +73,10 @@ Las entradas se reconstruyeron a partir del historial de Git, con fechas de Ecua
 - **Cómo lo resolví** — Organicé los cuatro bloques, reservé espacio para el bosquejo y dejé una declaración de uso de IA para todo el equipo. Verifiqué el PDF de cuatro páginas con las referencias al final.
 - **Tiempo dedicado** — 15 min.
 
+### 2026-11-15 · `a581146`, `df3a33e`, `0512854`
 
+- **Autoría en Git** — Eduardo Reinoso (`ereinosov`).
+- **Qué hice** — Preparé con asistencia de Claude mis dos diapositivas, CAP y PACELC y Modelos de comunicación, tomando como ejemplo la reprogramación de una sesión, y mi sección de las notas. Agregué una captura de la definición de PACELC en Ahmed et al. (2023).
+- **Problema encontrado** — SGRA hoy es un monolito sin réplicas verificadas, así que el comportamiento ante una partición sale de leer el código y no de una medición. La guía pide además clasificar la comunicación (modelo, sincronía y mecanismo) y mi primera diapositiva solo mostraba flechas.
+- **Cómo lo resolví** — Marqué como supuesto lo no comprobado y dejé la prueba de bloquear el puerto 5432 como propuesta, no ejecutada. Reemplacé la diapositiva por una tabla de modelo, sincronía y mecanismo, reutilicé la bibliografía del repositorio y cambié la fuente de PACELC por un artículo de 2023 con DOI.
+- **Tiempo dedicado** — 2 horas.
