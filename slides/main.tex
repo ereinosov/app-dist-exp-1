@@ -197,48 +197,47 @@
   \note{Ejecutar Cliente 25. Señalar la conversión en el servidor y el resultado del cliente. Cada terminal ejecuta una JVM distinta. Dar paso al integrante 2 al minuto 3.}
 \end{frame}
 
-\bloque{Integrante 2}
+\bloque{Allison Mera}
 \begin{frame}{Qué resuelve SGRA}
-  {\large Sistema de Gestión de Refuerzos Académicos \cite{back}}
+  \begingroup\large Sistema de Gestión de Refuerzos Académicos \cite{back}\par\endgroup
   \medskip
-  \begin{itemize}
-    \item \textbf{Problema} \quad \campo{tarea académica que organiza el sistema}
-    \item \textbf{Usuarios} \quad \campo{roles comprobados y una acción de cada uno}
-    \item \textbf{Escala} \quad \campo{cifra, unidad, periodo y fuente}
-  \end{itemize}
-  \guia{Busca una cifra de uso verificable. Si solo tienes datos de un piloto, indica la muestra y cuándo se midió. Marca cualquier proyección como supuesto.}
-\end{frame}
-
-\bloque{Integrante 2}
-\begin{frame}{Arquitectura de SGRA}
-  \centering
-  \begin{tikzpicture}
-    \node[nodo] (front) {Navegador\\Angular};
-    \node[nodo,right=1.7cm of front] (api) {API REST\\Spring Boot};
-    \node[nodo,right=1.7cm of api] (db) {PostgreSQL};
-    \node[nodo,below=1cm of api] (vault) {Azure Key Vault};
-    \draw[enlace] (front) -- node[above,font=\scriptsize]{HTTP} (api);
-    \draw[enlace] (api) -- node[above,font=\scriptsize]{JPA/JDBC} (db);
-    \draw[-Stealth,thick,Azul] (api) -- node[right,font=\scriptsize]{Carga de secretos} (vault);
-  \end{tikzpicture}
-  \par\medskip
-  {\small Vista lógica inicial basada en los repositorios. \cite{front,proxy,back}}
-  \guia{Partan de su bosquejo a mano. Completen el TikZ o sustitúyanlo por su diagrama draw.io. Rotulen qué cruza la red y sigan una operación de punta a punta.}
-  \note{Contrastar la vista lógica con el despliegue utilizado. El proxy local del front documenta una ruta hacia el backend. Agregar Blob Storage si interviene en la operación elegida.}
-\end{frame}
-
-\bloque{Integrante 2}
-\begin{frame}{Transparencias de distribución}
-  \begin{tabularx}{\linewidth}{@{}lXX@{}}
+  {\small
+  \begin{tabularx}{\linewidth}{@{}>{\bfseries}p{2.9cm} >{\raggedright\arraybackslash}X@{}}
     \toprule
-    & Tipo de transparencia & Ejemplo en SGRA\\
+    Problema     & Organizar los refuerzos, desde la solicitud hasta el reporte final.\\
     \midrule
-    \textbf{Ofrece} & \campo{nombre y alcance} & \campo{qué detalle queda oculto y para quién}\\[.6em]
-    \textbf{No ofrece} & \campo{nombre y alcance} & \campo{qué detalle se vuelve visible y cuándo}\\
+    Estudiante   & Solicita un refuerzo y acepta o rechaza una reprogramación.\\
+    Docente      & Acepta, rechaza o reprograma y registra la asistencia.\\
+    Coordinación & Carga los datos del semestre y obtiene reportes.\\
+    \midrule
+    Escala       & 14\,771 estudiantes de grado y 613 docentes en la UTEQ \cite{uteqcifras}.\\
+    \bottomrule
+  \end{tabularx}\par}
+  \smallskip
+  {\scriptsize\color{Gris} Escala potencial: supone el despliegue en toda la universidad; no es una cifra de uso medido.\par}
+  \note{SGRA organiza los refuerzos académicos de punta a punta. El estudiante solicita, el docente acepta, rechaza o reprograma y luego registra la asistencia, y coordinación carga el semestre y saca reportes. Si se desplegara en toda la UTEQ atendería a unos 14 mil estudiantes de grado y 613 docentes, según las cifras publicadas por la universidad. Aclarar que es una población potencial, no un uso medido. Tiempo: 30 segundos.}
+\end{frame}
+
+\bloque{Allison Mera}
+\begin{frame}{Arquitectura: SGRA distribuido (supuesto)}
+  \centering
+  \includegraphics[width=\linewidth,height=.68\textheight,keepaspectratio]{figuras/arquitectura-sgra.pdf}
+  \note{Primero aclarar en voz alta que SGRA hoy es un monolito REST con Angular, Spring Boot y PostgreSQL, y que el diagrama es el diseño propuesto por el equipo. Recorrer de arriba hacia abajo: los usuarios entran al cliente Angular, que envía REST al gateway; el gateway traduce a gRPC porque el navegador no habla gRPC de forma nativa. Señalar los seis servicios y que cada uno es dueño de su base de datos. Recorrer el flujo naranja: el docente reprograma, el gateway llama a Refuerzos y Refuerzos llama a Notificaciones con NotificarReprogramacion(), que envía el correo. Cerrar señalando que el chatbot usa REST hacia Groq porque es una API externa. Tiempo: 1 minuto 30.}
+\end{frame}
+
+\bloque{Allison Mera}
+\begin{frame}{Transparencias de distribución}
+  \small
+  \begin{tabularx}{\linewidth}{@{}>{\bfseries}l l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    & \textbf{Transparencia} & \textbf{Ejemplo en SGRA distribuido}\\
+    \midrule
+    Ofrece    & Acceso    & Refuerzos invoca \texttt{NotificarReprogramacion()} como un método local; el \emph{stub} de gRPC oculta la red.\\[.5em]
+    Ofrece    & Ubicación & El usuario usa una sola dirección web; el gateway decide qué servidor atiende cada petición.\\[.5em]
+    No ofrece & Fallos    & Si Notificaciones cae, la llamada devuelve \texttt{UNAVAILABLE} o vence su \emph{deadline}, y el estudiante no recibe el aviso.\\
     \bottomrule
   \end{tabularx}
-  \guia{Verifica si el proxy local oculta la ubicación del backend para el navegador. Para el segundo ejemplo, comprueba qué ve el usuario si ese backend queda inaccesible.}
-  \note{Indicar para qué actor aplica cada transparencia. Enlazar el ejemplo con una captura, una prueba o un archivo. Entregar el turno al integrante 3 al minuto 6.}
+  \note{Una transparencia oculta que el sistema está repartido en varias máquinas. La de acceso se cumple porque, para Refuerzos, notificar una reprogramación parece una llamada local: el stub serializa la llamada y la envía por la red. La de ubicación se cumple porque el usuario entra a una sola dirección y no sabe en qué servidor corre cada servicio. La de fallos no se cumple: si Notificaciones se cae, Refuerzos recibe un error o vence el tiempo límite, y el estudiante se queda sin el aviso. Cómo se maneja ese fallo lo explica el integrante 4. Entregar el turno al integrante 3 al minuto 6.}
 \end{frame}
 
 \bloque{Eduardo Reinoso}
