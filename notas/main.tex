@@ -1,0 +1,147 @@
+% Compilar desde notas:
+% pdflatex main.tex -> biber main -> pdflatex main.tex -> pdflatex main.tex
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=24mm]{geometry}
+\usepackage{mathptmx}
+\usepackage{booktabs,tabularx}
+\usepackage{graphicx}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\usepackage[hidelinks]{hyperref}
+\addbibresource{../evidencias/capturas-fuentes/referencias.bib}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{.55em}
+\renewcommand{\arraystretch}{1.2}
+
+% Sustituir cada \espacionota por el guion breve de ese apartado.
+\newcommand{\espacionota}{%
+  \par\noindent\rule[-1.2ex]{\linewidth}{.25pt}\par
+  \noindent\rule[-1.2ex]{\linewidth}{.25pt}\par}
+
+\begin{document}
+
+{\small UTEQ \enspace / \enspace Aplicaciones Distribuidas (ISR-701) \enspace / \enspace EXP-1\par}
+\medskip
+{\LARGE\bfseries Notas de la exposición\par}
+{\large RPC, gRPC y RMI en el contexto del análisis de SGRA\par}
+\medskip
+\textbf{Equipo LMRT} \quad Notas grupales\\
+\textbf{Bloque de apertura} \quad Belinda Betzabeth Toaquiza Zambrano.
+Diapositivas 1--4.
+
+\section*{Teoría de la invocación remota}
+
+\textbf{0:00--0:55 · Portada y recorrido de una llamada RPC}
+
+«Buenos días. Somos el equipo LMRT. Imaginen que quiero convertir 25 grados Celsius a Fahrenheit y que el cálculo se realiza en otro proceso. A eso le llamamos una llamada a procedimiento remoto, o RPC. Mi programa llama a un \emph{stub}, que es el representante local del servicio. El sistema convierte el argumento en bytes y envía la solicitud. El servidor recupera el dato, hace la conversión y devuelve 77 grados Fahrenheit. Si la llamada es bloqueante, el hilo que la hizo espera el resultado o un error. Una llamada no bloqueante permite que ese hilo continúe y atienda el resultado después».
+
+\textit{Apoyo visual.} Señalar las dos flechas del diagrama. La de ida lleva el argumento y la de vuelta trae el resultado o un error. El paso por la red añade latencia y hace posible que se pierda una respuesta. \cite{seemakhupt2023,kazanavicius2023}
+
+\textbf{0:55--2:00 · Comparación con gRPC y Java RMI}
+
+«RPC es la idea general. gRPC la implementa mediante servicios. En un archivo \texttt{.proto} se definen los métodos y los tipos de mensaje, y a partir de ese contrato se puede generar código para el cliente y el servidor. Protocol Buffers codifica los datos por defecto y HTTP/2 transporta los mensajes. Un socket es la interfaz que usa el sistema para conectarse por red. En Java RMI, el cliente invoca un método de un objeto que vive en otra máquina virtual de Java. El contrato es una interfaz Java y el \emph{stub} representa al objeto remoto. Ahora veremos esa llamada desde las dos terminales».
+
+\textit{Apoyo visual.} Señalar las tres columnas siguiendo el orden RPC, gRPC y Java RMI. Si preguntan por rendimiento, explicar que depende de la operación, la carga y el entorno medido. La API REST de SGRA se aborda en los bloques siguientes. \cite{kaminski2023,rozek2026,darbord2023}
+
+\newpage
+\section*{Demostración · Conversión de Celsius a Fahrenheit}
+
+\textbf{2:00--2:15 · Presentar el contrato.}
+«El método remoto recibe una temperatura en Celsius y devuelve el valor en Fahrenheit». Mostrar en \texttt{Conversor.java} la firma \texttt{double aFahrenheit(double celsius)}. La interfaz extiende \texttt{Remote} y el método declara \texttt{RemoteException}.
+
+\textbf{2:15--2:40 · Ejecutar la llamada.}
+Dejar el servidor iniciado en la terminal A. En la terminal B, ejecutar el cliente con el argumento \texttt{25}. El cliente busca el objeto \texttt{Conversor} en el registro RMI, recibe el \emph{stub} e invoca el método. El servidor aplica la fórmula \(\mathrm{F} = 1{,}8\,\mathrm{C} + 32\).
+
+\begin{verbatim}
+Terminal A   Servidor: 25.0 C -> 77.0 F
+Terminal B   Cliente: 77.0 F
+\end{verbatim}
+
+\textbf{2:40--3:00 · Explicar el resultado.}
+«El registro permitió localizar el objeto. El cálculo ocurrió en la JVM del servidor y la JVM del cliente esperó hasta recibir 77 grados Fahrenheit». Pasar el turno al integrante que presenta SGRA.
+
+\textit{Preparación.} Compilar \texttt{Conversor.java}, \texttt{Servidor.java} y \texttt{Cliente.java} con el JDK. Abrir dos terminales y ejecutar cada clase con el mismo directorio de clases. Para el ensayo, probar también \texttt{Cliente 0}, que devuelve \texttt{32.0 F}. Durante la exposición se muestra una sola llamada.
+
+\section*{Tabla de aportes del equipo}
+
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+  \toprule
+  \textbf{Integrante} & \textbf{Aportes documentados}\\
+  \midrule
+  Belinda Toaquiza & Desarrollo y exposición de la teoría de RPC, gRPC y
+  Java RMI. Selección de fuentes y evidencias de lectura. Preparación y prueba
+  del conversor de temperatura para la demostración.\\
+  Integrante 2 & \textit{Nombre y aportes por completar.}\rule{0pt}{5mm}\\
+  Integrante 3 & \textit{Nombre y aportes por completar.}\rule{0pt}{5mm}\\
+  Integrante 4 & \textit{Nombre y aportes por completar.}\rule{0pt}{5mm}\\
+  \bottomrule
+\end{tabularx}
+
+\section*{Declaración de uso de inteligencia artificial}
+
+\textbf{Belinda Toaquiza.} Utilicé inteligencia artificial como apoyo para la
+búsqueda de fuentes y para formalizar la redacción de las diapositivas.
+
+\textbf{Resto del equipo.} \textit{Espacio para añadir la declaración que corresponda.}
+
+\newpage
+\section*{Integrante 2 · Presentación de SGRA}
+
+\textbf{Responsable} \quad [Nombre] \hfill \textbf{Turno} \quad 3:00--6:00
+
+\textbf{Presentación del sistema.} Anotar el problema, quiénes lo usan y una cifra de escala con su fuente.
+\espacionota
+
+\textbf{Arquitectura.} Explicar el diagrama propio siguiendo el recorrido de una operación real.
+\espacionota
+
+\textbf{Transparencias.} Preparar un ejemplo de una transparencia que ofrece SGRA y otro de una que no ofrece.
+\espacionota
+
+\section*{Integrante 3 · Diseño de SGRA}
+
+\textbf{Responsable} \quad [Nombre] \hfill \textbf{Turno} \quad 6:00--9:00
+
+\textbf{CAP y PACELC.} Precisar la operación y la topología. Explicar qué se prioriza con y sin partición, indicando qué está verificado y qué es un supuesto.
+\espacionota
+
+\textbf{Comunicación.} Mostrar una petición real del frontend a la API REST y relacionarla con el modelo cliente-servidor y con los conceptos de la apertura.
+\espacionota
+
+\newpage
+\section*{Integrante 4 · Fallos, comparación y cierre}
+
+\textbf{Responsable} \quad [Nombre] \hfill \textbf{Turno} \quad 9:00--12:00
+
+\textbf{Tolerancia a fallos.} Añadir el incidente, la evidencia, el impacto, la recuperación y el análisis de causa raíz según FORM-AC-01.
+\espacionota
+
+\textbf{Comparación crítica.} Identificar un sistema comparable y explicar una fortaleza, una limitación y el compromiso entre ambas.
+\espacionota
+
+\textbf{Lecciones y conclusiones.} Escribir qué decisión aplicarían al PFC, cómo la validarían y qué aprendieron del análisis de SGRA.
+\espacionota
+
+\section*{Anexo · Bosquejo inicial de arquitectura}
+
+\IfFileExists{../evidencias/esquema-mano/bosquejo.jpg}{%
+  \begin{center}
+    \includegraphics[width=.92\linewidth,height=40mm,keepaspectratio]
+      {../evidencias/esquema-mano/bosquejo.jpg}
+  \end{center}
+}{%
+  \begin{center}
+    \fbox{\parbox[c][38mm][c]{.88\linewidth}{\centering
+      Insertar el bosquejo dibujado a mano con los nombres del equipo y la fecha visibles.\\[.6em]
+      \texttt{evidencias/esquema-mano/bosquejo.jpg}}}
+  \end{center}
+}
+
+{\footnotesize
+\setlength{\bibitemsep}{2pt}
+\printbibliography[title={Referencias}]
+}
+
+\end{document}
