@@ -315,28 +315,29 @@
   \note{El diagnóstico se infiere del cambio de una sola clave en el PR. Las claves JSON distinguen mayúsculas. La fuente pública no indica duración, cantidad de usuarios afectados ni despliegue de la corrección.}
 \end{frame}
 
-\bloque{Integrante 4}
-\begin{frame}{Comparación con un sistema real}
-  \begin{tabularx}{\linewidth}{@{}lXX@{}}
+\bloque{Byron Loor}
+\begin{frame}{SGRA y TracCloud}
+  \small
+  \begin{tabularx}{\linewidth}{@{}>{\bfseries}lXX@{}}
     \toprule
-    \textbf{Criterio} & \textbf{SGRA} & \textbf{\campo{sistema comparable}}\\
+    & SGRA \cite{informeSgra} & TracCloud (Ohio University) \cite{traccloudOhio}\\
     \midrule
-    Flujo equivalente & \campo{evidencia de SGRA} & \campo{función y fuente}\\[.4em]
-    Decisión técnica & \campo{fortaleza o límite} & \campo{fortaleza o límite}\\
+    Programación & El estudiante solicita un refuerzo. El docente lo acepta o reprograma. & El estudiante elige y confirma un horario disponible.\\
+    Compromiso & El docente conserva el control de la agenda y debe tramitar cada solicitud. & La reserva directa agiliza la confirmación y requiere mantener la oferta de horarios al día.\\
     \bottomrule
   \end{tabularx}
-  \guia{Elige un sistema que cubra el mismo flujo académico. Cierra con una postura que mencione la ventaja y el costo de la decisión comparada.}
 \end{frame}
 
-\bloque{Integrante 4}
+\bloque{Byron Loor}
 \begin{frame}{Lecciones para el PFC}
   \begin{itemize}
-    \item \textbf{Decisión} \quad \campo{qué mantener o cambiar en el PFC}
-    \item \textbf{Validación} \quad \campo{prueba, métrica y resultado esperado}
-    \item \textbf{Conclusión} \quad \campo{hallazgo concreto sobre SGRA y su comunicación}
+    \item \textbf{Pruebas de integración en CI} \quad Guardar y consultar la asistencia con PostgreSQL.
+    \item \textbf{Recuperación de avisos} \quad Guardar el nuevo horario y el aviso pendiente en una transacción. Reintentar el envío en segundo plano.
+    \item \textbf{Validación} \quad Simular que Notificaciones devuelve \texttt{UNAVAILABLE}. Verificar el horario guardado y el aviso procesado tras la recuperación.
   \end{itemize}
-  \guia{Vincula tu propuesta con un hallazgo anterior. Si propones gRPC, identifica entre qué componentes y bajo qué condición aportaría valor.}
+  \note{Vincular la prueba de asistencia con el fallo documentado. La recuperación de avisos es una propuesta para el PFC que retoma el ejemplo de reprogramación del integrante 3.}
 \end{frame}
+
 
 \bloque{Todo el equipo}
 \begin{frame}{Preguntas}
@@ -350,11 +351,10 @@
 \bloque{Anexo}
 \begin{frame}[allowframebreaks=.95]{Referencias}
   \hypertarget{fuentes-teoria}{}
+  \hyperlink{comparacion-teoria}{\beamerreturnbutton{Volver a la comparación}}\par\smallskip
   \renewcommand{\bibfont}{\footnotesize}
   \setlength{\bibitemsep}{3pt}
   \printbibliography[heading=none]
-  \smallskip
-  \hyperlink{comparacion-teoria}{\beamerreturnbutton{Volver a la comparación}}
   \note{Completar al menos seis fuentes de los últimos cinco años, con tres artículos de revistas indexadas y DOI verificable.}
 \end{frame}
 
