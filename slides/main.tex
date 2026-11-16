@@ -123,8 +123,8 @@
   \textbf{RPC} permite ejecutar una operación en otro proceso. El \emph{stub} del cliente convierte los argumentos en bytes para enviarlos al servidor. \cite{seemakhupt2023,kazanavicius2023}
   \par\medskip
   \begin{beamercolorbox}[wd=\linewidth,sep=1ex]{guia}
-    \texttt{sumar(3, 4)} \enspace $\longrightarrow$ \enspace
-    el servidor calcula \enspace $\longrightarrow$ \enspace \texttt{7}
+    \texttt{aFahrenheit(25)} \enspace $\longrightarrow$ \enspace
+    el servidor convierte \enspace $\longrightarrow$ \enspace \(77\,^\circ\mathrm{F}\)
   \end{beamercolorbox}
   \note{Señala la ida y la vuelta en el diagrama. Una llamada bloqueante detiene el hilo que la invoca mientras espera; en una llamada no bloqueante ese hilo puede continuar. Véase la guía del integrante 1 para el guion completo.}
 \end{frame}
@@ -175,14 +175,26 @@
 \end{frame}
 
 \bloque{Belinda Toaquiza}
-\begin{frame}{Demo de una llamada remota}
-  \begin{enumerate}
-    \item \textbf{Contrato} \quad \campo{firma del método y tipos de entrada/salida}
-    \item \textbf{Ejecución} \quad \campo{comando del cliente e input de prueba}
-    \item \textbf{Resultado} \quad \campo{respuesta obtenida en el servidor o cliente}
-  \end{enumerate}
-  \guia{Elige un saludo o una suma en gRPC o Java RMI. Deja el servidor iniciado y pon una captura de respaldo con la salida real.}
-  \note{Mostrar una invocación. En gRPC, señalar el método en el .proto. En RMI, señalar la interfaz remota. La demo es un ejercicio independiente. Dar paso al integrante 2 al minuto 3.}
+\begin{frame}{Demo de Java RMI}
+  \textbf{Contrato} \quad \texttt{double aFahrenheit(double celsius)}\par
+  \bigskip
+  \begin{columns}[onlytextwidth,T]
+    \begin{column}{.47\linewidth}
+      \textbf{Servidor}\par\smallskip
+      Convierte Celsius a Fahrenheit.\par\smallskip
+      {\footnotesize\texttt{Servidor: 25.0 C -> 77.0 F}}
+    \end{column}
+    \begin{column}{.47\linewidth}
+      \textbf{Cliente}\par\smallskip
+      Invoca el método a través del \emph{stub}.\par\smallskip
+      {\footnotesize\texttt{Cliente: 77.0 F}}
+    \end{column}
+  \end{columns}
+  \par\medskip
+  \begin{beamercolorbox}[wd=\linewidth,sep=1ex]{guia}
+    \small El cliente localiza el objeto con el nombre \texttt{Conversor}.
+  \end{beamercolorbox}
+  \note{Ejecutar Cliente 25. Señalar la conversión en el servidor y el resultado del cliente. Cada terminal ejecuta una JVM distinta. Dar paso al integrante 2 al minuto 3.}
 \end{frame}
 
 \bloque{Integrante 2}
