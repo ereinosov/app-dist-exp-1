@@ -287,33 +287,32 @@
   \note{Clasifico la comunicación: cliente-servidor, con el navegador pidiendo y el servidor respondiendo; la petición HTTP es síncrona y el correo sale aparte con @Async. Hoy SGRA es un monolito REST, sin llamadas remotas internas. El diseño del equipo es un supuesto: el Gateway traduce REST a gRPC y Refuerzos llama a Notificaciones con NotificarReprogramacion(). Por qué gRPC: el contrato se escribe en un archivo .proto y viaja sobre HTTP/2 según Kamiński; la comparación de rendimiento de Rożek depende de la operación y la carga, así que no afirmo que sea más rápido. Por qué no RMI: exige cliente Java y el de SGRA es Angular; Darbord migró de RMI y GWT-RPC a HTTP con JSON en una aplicación con Angular y Spring Boot. Por qué SGRA eligió REST: no hay documento de decisión, es un supuesto que debo confirmar con el dueño del repositorio. Archivos revisados en el commit e28bcfa de back-SGRA: TeacherRequestController, TeacherRequestServiceImpl y EmailService. Antes de explicar por qué hace falta el Gateway, verificarlo en la documentación de gRPC. Dar paso al integrante 4 al minuto 9.}
 \end{frame}
 
-\bloque{Integrante 4}
-\begin{frame}{Tolerancia a fallos}
-  \textbf{Caso}\quad \campo{fecha, componente, impacto y fuente}
+\bloque{Byron Loor}
+\begin{frame}{Tolerancia a fallos en SGRA}
+  \textbf{Validación de Excel}\quad Coordinación importa datos del período.
   \medskip
-  \begin{enumerate}
-    \item \textbf{Detección} \quad \campo{señal o registro y fallo que revela}
-    \item \textbf{Recuperación} \quad \campo{respuesta observada, alcance y límite}
-    \item \textbf{Impacto} \quad \campo{operación afectada, usuarios y duración}
-  \end{enumerate}
-  \guia{El README menciona errores de arranque asociados a Key Vault. Busquen evidencia fechada de un incidente de SGRA. Si hacen una prueba, titúlenla «simulación» e indiquen las condiciones y los resultados. \cite{back}}
-  \note{El apartado de problemas comunes orienta la búsqueda. Para documentar el incidente, reunir evidencia fechada y relacionarla con el impacto.}
+  \begin{itemize}
+    \item \textbf{Detección} \quad Groq devuelve un error o supera el límite de 10 s.
+    \item \textbf{Recuperación} \quad El backend activa el validador local en Java.
+    \item \textbf{Límite} \quad El validador aplica reglas fijas. Un error crítico bloquea la carga.
+  \end{itemize}
+  \medskip
+  {\small Mecanismo probado en integración. \cite[pp.~66 y 142]{informeSgra}}
+  \note{En el SGRA desplegado, Coordinación usa Groq para validar archivos Excel. Ante un error o un tiempo de espera de 10 segundos, entra el validador Java y la revisión puede continuar. Es una degradación controlada. Pasar al fallo real del registro de asistencia.}
 \end{frame}
 
-\bloque{Integrante 4}
-\begin{frame}{Del síntoma a la causa raíz}
-  \centering
-  \begin{tikzpicture}[node distance=9mm]
-    \node[nodo] (sintoma) {\textbf{Síntoma}\\\small\campo{qué se observó}};
-    \node[nodo,right=of sintoma] (causa) {\textbf{Causa raíz}\\\small\campo{qué lo explica}};
-    \node[nodo,right=of causa] (accion) {\textbf{Mitigación}\\\small\campo{qué se cambia}};
-    \draw[-Stealth,thick,Azul] (sintoma) -- (causa);
-    \draw[-Stealth,thick,Azul] (causa) -- (accion);
-  \end{tikzpicture}
-  \par\bigskip
-  \raggedright
-  \textbf{Evidencia}\quad \campo{registro fechado, prueba o fuente que confirma la causa}
-  \guia{Aplica el método de FORM-AC-01. Distingue qué disparó el fallo, qué lo hizo posible y cómo comprobarías que la mitigación funciona.}
+\bloque{Byron Loor}
+\begin{frame}{Fallo en el registro de asistencia}
+  \textbf{21 de marzo de 2026}\quad Corrección integrada en GitHub. \cite{sgraAsistencia}
+  \medskip
+  \begin{enumerate}
+    \item \textbf{Flujo afectado} \quad Registro de asistencia por el docente.
+    \item \textbf{Causa inferida} \quad La clave \texttt{participantId} del JSON no coincidía con la esperada por PostgreSQL.
+    \item \textbf{Corrección} \quad El PR \#55 cambió la clave a \texttt{participantid}.
+  \end{enumerate}
+  \medskip
+  {\small Prevención propuesta: probar el guardado y la lectura de asistencia con PostgreSQL en CI.}
+  \note{El diagnóstico se infiere del cambio de una sola clave en el PR. Las claves JSON distinguen mayúsculas. La fuente pública no indica duración, cantidad de usuarios afectados ni despliegue de la corrección.}
 \end{frame}
 
 \bloque{Integrante 4}
