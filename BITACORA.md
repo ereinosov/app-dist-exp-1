@@ -48,3 +48,11 @@ Las entradas se reconstruyeron a partir del historial de Git, con fechas de Ecua
 - **Problema encontrado** — La suma propuesta inicialmente ya se había visto en clase y los nombres abreviados dificultaban identificar las fuentes.
 - **Cómo lo resolví** — Probé la conversión en dos procesos Java, actualicé el ejemplo y la demo en las diapositivas, y comprobé que los PDF conservaran el mismo contenido tras el cambio de nombre.
 - **Tiempo dedicado** — 45 min
+
+### 2026-11-15 · Capturas de lectura
+
+- **Autoría en Git** — Belinda Toaquiza (`BelindaTZ`).
+- **Qué hice** — Preparé con asistencia de Codex cinco capturas de los artículos citados en mi bloque de RPC, gRPC y Java RMI.
+- **Problema encontrado** — Los PDF completos y los nombres abreviados dificultaban localizar los pasajes usados en la exposición.
+- **Cómo lo resolví** — Seleccioné las páginas, marqué los pasajes pertinentes y guardé las capturas con nombres que indican el tema, el autor y la página. Cada imagen incluye el DOI y conserva el número de página.
+- **Tiempo dedicado** — Por confirmar.
